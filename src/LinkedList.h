@@ -297,7 +297,7 @@ template <typename Type>
 
 		ConstIterator operator++(int)
 		{
-			if(node->next == sentinelIterator)
+			if(node == sentinelIterator)
 				throw std::out_of_range("Can't increase iterator - operator++(int)");
 			ConstIterator result(*this);
 			++(*this);

@@ -180,7 +180,7 @@ template <typename Type>
         prepend(item);
         return;
       }
-			new Node(item, insertPosition.node - 1, insertPosition.node);
+			new Node(item, (insertPosition - 1).node, insertPosition.node);
 			size++;
 		}
 
@@ -355,25 +355,25 @@ template <typename Type>
 					temporary = temporary->prev;
 					d--;
 				}
-				if(d<0)
-					while(d<0)
-					{
-						temporary = temporary->next;
-						d++;
-					}
-					return ConstIterator(temporary,sentinelIterator);
-				}
-
-				bool operator==(const ConstIterator& other) const
+			if(d<0)
+				while(d<0)
 				{
-					return (node == other.node);
+					temporary = temporary->next;
+					d++;
 				}
+			return ConstIterator(temporary,sentinelIterator);
+		}
 
-				bool operator!=(const ConstIterator& other) const
-				{
-					return !(*this == other);
-				}
-			};
+	  bool operator==(const ConstIterator& other) const
+		{
+			return (node == other.node);
+		}
+
+		bool operator!=(const ConstIterator& other) const
+		{
+			return !(*this == other);
+		}
+  };
 
 template <typename Type>
 			class LinkedList<Type>::Iterator : public LinkedList<Type>::ConstIterator

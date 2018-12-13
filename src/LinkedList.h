@@ -198,8 +198,8 @@ template <typename Type>
 		{
 			if(isEmpty() == 1)
 				throw std::out_of_range ("List is empty, can't pop anything");
-			value_type temporary = sentinel->next->value;
-			delete sentinel->next;
+			value_type temporary = sentinel->prev->value;
+			delete sentinel->prev;
 			size--;
 			return temporary;
 		}

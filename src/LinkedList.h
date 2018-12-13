@@ -211,6 +211,7 @@ template <typename Type>
 			if(possition.node == sentinel)
 				throw std::out_of_range ("Can't go there");
 			delete possition.node;
+      size--;
 		}
 
 		void erase(const const_iterator& firstIncluded, const const_iterator& lastExcluded)

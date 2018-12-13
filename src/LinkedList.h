@@ -175,7 +175,7 @@ template <typename Type>
 
 		void insert(const const_iterator& insertPosition, const Type& item)
 		{
-			if(insertPosition.node == sentinel)
+			if(insertPosition.node == sentinel && insertPosition.node -> next == insertPosition.node)
       {
         prepend(item);
         return;

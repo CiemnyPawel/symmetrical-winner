@@ -218,9 +218,9 @@ template <typename Type>
 		{
 			if(isEmpty() == 1)
 				throw std::out_of_range ("List is empty, can't pop anything");
-			if(firstIncluded.node == sentinel or lastExcluded.node == sentinel)
+			if(firstIncluded.node == sentinel)
 				throw std::out_of_range ("Can't go there");
-			for(auto i = firstIncluded + 1; i != lastExcluded + 1; i++)
+			for(auto i = firstIncluded; i != lastExcluded; i++)
 			{
 				delete i.node;
 				size--;

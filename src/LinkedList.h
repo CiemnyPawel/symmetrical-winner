@@ -176,7 +176,10 @@ template <typename Type>
 		void insert(const const_iterator& insertPosition, const Type& item)
 		{
 			if(insertPosition.node == sentinel)
-				throw std::out_of_range ("Can't go there");
+      {
+        prepend(item);
+        return;
+      }
 			new Node(item, insertPosition.node - 1, insertPosition.node);
 			size++;
 		}

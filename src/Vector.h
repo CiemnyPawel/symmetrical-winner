@@ -193,7 +193,7 @@ public:
   {
       if (isEmpty() == 1)
           throw std::out_of_range("Can't erase element from empty vector");
-      if (possition.index >= cend().index and possition.index < cbegin().index)
+      if (possition.index >= vectorSize or possition.index < 0)
           throw std::out_of_range("Can't erase object out of vector");
       for(auto i = possition.index; i != vectorSize -1; i++)
       {

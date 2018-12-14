@@ -295,7 +295,7 @@ public:
 
   ConstIterator& operator++()
   {
-      if(index+1 == pointerToVector->vectorSize)
+      if(index + 1 == pointerToVector -> vectorSize + 1)
          throw std::out_of_range("Can't increase iterator");
       index++;
       return *this;

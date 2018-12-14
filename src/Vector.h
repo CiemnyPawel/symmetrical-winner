@@ -70,6 +70,8 @@ public:
 
   ~Vector()
   {
+    if(vectorArray == nullptr)
+      return;
     delete [] vectorArray;
   }
 
@@ -166,7 +168,7 @@ public:
     else
     {
         value_type temporary = *begin();
-        for(auto i = 0; i != vectorSize - 2; i++)
+        for(auto i = 0; i != vectorSize - 1; i++)
         {
             vectorArray[i] = vectorArray[i+1];
         }

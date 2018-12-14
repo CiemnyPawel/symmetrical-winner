@@ -32,37 +32,37 @@ private:
 public:
   Vector()
   {
-    this->vectorSize = 0;
-    this->reservedSize = 2;
-    this->vectorArray = new value_type[this->reservedSize];
+    vectorSize = 0;
+    reservedSize = 2;
+    vectorArray = new value_type[reservedSize];
   }
   Vector(std::initializer_list<Type> l)
   {
-    this->vectorSize = l.size();
-    this->reservedSize = this->vectorSize;
-    this->vectorArray = new value_type[this->reservedSize];
+    vectorSize = l.size();
+    reservedSize = vectorSize;
+    vectorArray = new value_type[reservedSize];
     for(auto i = l.begin(); i != l.end(); i++)
     {
-      this->append(*i);
+      append(*i);
     }
   }
 
   Vector(const Vector& other)
   {
-      this->vectorSize = other.vectorSize;
-      this->reservedSize = other.reservedSize;
-      this->vectorArray = new value_type[this->reservedSize];
-      for(auto i = 0; i != this->vectorSize; i++)
+      vectorSize = other.vectorSize;
+      reservedSize = other.reservedSize;
+      vectorArray = new value_type[reservedSize];
+      for(auto i = 0; i != vectorSize; i++)
       {
-          this->vectorArray[i] = other.vectorArray[i];
+          vectorArray[i] = other.vectorArray[i];
       }
   }
 
   Vector(Vector&& other)
   {
-      this->vectorSize = other.vectorSize;
-      this->reservedSize = other.reservedSize;
-      this->vectorArray = other.vectorArray;
+      vectorSize = other.vectorSize;
+      reservedSize = other.reservedSize;
+      vectorArray = other.vectorArray;
       other.vectorSize = 0;
       other.reservedSize = 0;
       other.vectorArray = nullptr;
@@ -70,19 +70,19 @@ public:
 
   ~Vector()
   {
-    delete [] this->vectorArray;
+    delete [] vectorArray;
   }
 
   Vector& operator=(const Vector& other)
   {
       if(this != &other) {
-          delete [] this->vectorArray;
-          this->vectorSize = other.vectorSize;
-          this->reservedSize = other.reservedSize;
-          this->vectorArray = new value_type[this->reservedSize];
-          for (auto i = 0; i != this->vectorSize; i++)
+          delete [] vectorArray;
+          vectorSize = other.vectorSize;
+          reservedSize = other.reservedSize;
+          vectorArray = new value_type[reservedSize];
+          for (auto i = 0; i != vectorSize; i++)
           {
-              this->vectorArray[i] = other.vectorArray[i];
+              vectorArray[i] = other.vectorArray[i];
           }
       }
       return *this;
@@ -92,10 +92,10 @@ public:
   {
       if(this != &other)
       {
-          delete [] this->vectorArray;
-          this->vectorSize = other.vectorSize;
-          this->reservedSize = other.reservedSize;
-          this->vectorArray = other.vectorArray;
+          delete [] vectorArray;
+          vectorSize = other.vectorSize;
+          reservedSize = other.reservedSize;
+          vectorArray = other.vectorArray;
           other.vectorSize = 0;
           other.reservedSize = 0;
           other.vectorArray = nullptr;
@@ -105,7 +105,7 @@ public:
 
   bool isEmpty() const
   {
-    if(this->vectorSize==0)
+    if(vectorSize==0)
       return 1;
     else
       return 0;
@@ -113,27 +113,27 @@ public:
 
   size_type getSize() const
   {
-    return this->vectorSize;
+    return vectorSize;
   }
 
   void append(const Type& item)
   {
-    if(this->vectorSize==this->reservedSize)
-      this->reallocate();
-    this->vectorArray[(int)this->vectorSize]=item;
+    if(vectorSize==reservedSize)
+      reallocate();
+    vectorArray[(int)vectorSize]=item;
     vectorSize++;
   }
 
   void prepend(const Type& item)
   {
-    if(this->vectorSize==this->reservedSize)
-      this->reallocate();
+    if(vectorSize==reservedSize)
+      reallocate();
     for(auto i=vectorSize; i!=0; i--)
     {
-      this->vectorArray[i]=this->vectorArray[i-1];
+      vectorArray[i]=vectorArray[i-1];
     }
-    this->vectorArray[0]=item;
-    this->vectorSize++;
+    vectorArray[0]=item;
+    vectorSize++;
   }
 
   void insert(const const_iterator& insertPosition, const Type& item)
@@ -148,36 +148,36 @@ public:
       append(item);
       return;
     }
-    if(this->vectorSize==this->reservedSize)
-      this->reallocate();
+    if(vectorSize==reservedSize)
+      reallocate();
     size_type insertPlace=insertPosition.index-cbegin().index;
     for(auto i=vectorSize; i!=insertPlace; i--)
     {
-      this->vectorArray[i]=this->vectorArray[i-1];
+      vectorArray[i]=vectorArray[i-1];
     }
-    this->vectorArray[insertPlace]=item;
-    this->vectorSize++;
+    vectorArray[insertPlace]=item;
+    vectorSize++;
   }
 
   Type popFirst()
   {
-    if(this->isEmpty() == 1)
+    if(isEmpty() == 1)
         throw std::out_of_range("Can't delete first element in empty vector");
     else
     {
         value_type temporary = *begin();
-        for(auto i = 0; i != this->vectorSize - 2; i++)
+        for(auto i = 0; i != vectorSize - 2; i++)
         {
-            this->vectorArray[i] = this->vectorArray[i+1];
+            vectorArray[i] = vectorArray[i+1];
         }
-        this->vectorSize--;
+        vectorSize--;
         return temporary;
     }
   }
 
   Type popLast()
   {
-      if(this->isEmpty() == 1)
+      if(isEmpty() == 1)
           throw std::out_of_range("Can't delete last element in empty vector");
       else
       {
@@ -189,30 +189,30 @@ public:
 
   void erase(const const_iterator& possition)
   {
-      if (this->isEmpty() == 1)
+      if (isEmpty() == 1)
           throw std::out_of_range("Can't erase element from empty vector");
-      if (possition.index >= this->cend().index and possition.index < this->cbegin().index)
+      if (possition.index >= cend().index and possition.index < cbegin().index)
           throw std::out_of_range("Can't erase object out of vector");
-      for(auto i = possition.index; i != this->vectorSize -1; i++)
+      for(auto i = possition.index; i != vectorSize -1; i++)
       {
-          this->vectorArray[i] = this->vectorArray[i+1];
+          vectorArray[i] = vectorArray[i+1];
       }
-      this->vectorSize--;
+      vectorSize--;
   }
 
   void erase(const const_iterator& firstIncluded, const const_iterator& lastExcluded)
   {
-      if (this->isEmpty() == 1)
+      if (isEmpty() == 1)
           throw std::out_of_range("Can't erase element from empty vector");
-      if (firstIncluded.index >= this->cend().index and firstIncluded.index < this->cbegin().index)
+      if (firstIncluded.index >= cend().index and firstIncluded.index < cbegin().index)
           throw std::out_of_range("Can't erase object out of vector");
-      if (lastExcluded.index >= this->cend().index and lastExcluded.index < this->cbegin().index)
+      if (lastExcluded.index >= cend().index and lastExcluded.index < cbegin().index)
           throw std::out_of_range("Can't erase object out of vector");
-      for(auto i = lastExcluded.index; i != this->vectorSize; i++)
+      for(auto i = lastExcluded.index; i != vectorSize; i++)
       {
-          this->vectorArray[i - lastExcluded.index + firstIncluded.index] = this->vectorArray[i-1];
+          vectorArray[i - lastExcluded.index + firstIncluded.index] = vectorArray[i-1];
       }
-      this->vectorSize -= lastExcluded.index - firstIncluded.index;
+      vectorSize -= lastExcluded.index - firstIncluded.index;
   }
 
   iterator begin()
@@ -223,7 +223,7 @@ public:
 
   iterator end()
   {
-      iterator i = Iterator(this,this->vectorSize);
+      iterator i = Iterator(this,vectorSize);
       return i;
   }
 
@@ -235,7 +235,7 @@ public:
 
   const_iterator cend() const
   {
-      const_iterator i = ConstIterator(this,this->vectorSize);
+      const_iterator i = ConstIterator(this,vectorSize);
       return i;
   }
 
@@ -250,14 +250,14 @@ public:
   }
   void reallocate()
   {
-      this->reservedSize<<=2;
-      auto newArray = new value_type[this->reservedSize];
-      for (auto i = 0; i != this->vectorSize; i++)
+      reservedSize<<=2;
+      auto newArray = new value_type[reservedSize];
+      for (auto i = 0; i != vectorSize; i++)
       {
-          newArray[i] = this->vectorArray[i];
+          newArray[i] = vectorArray[i];
       }
-      delete [] this->vectorArray;
-      this->vectorArray = newArray;
+      delete [] vectorArray;
+      vectorArray = newArray;
   }
 };
 
@@ -277,68 +277,68 @@ public:
 
   explicit ConstIterator()
   {
-      this->pointerToVector = nullptr;
-      this->index = 0;
+      pointerToVector = nullptr;
+      index = 0;
   }
   ConstIterator(const Vector* other, size_t other2)
   {
-      this->pointerToVector = other;
-      this->index = other2;
+      pointerToVector = other;
+      index = other2;
   }
 
   reference operator*() const
   {
-      if(this->pointerToVector == nullptr or this->pointerToVector->vectorSize <= this->index)
+      if(pointerToVector == nullptr or pointerToVector->vectorSize <= index)
           throw std::out_of_range("Iterator is pointing to non-existing place");
-      return this->pointerToVector->vectorArray[this->index];
+      return pointerToVector->vectorArray[index];
   }
 
   ConstIterator& operator++()
   {
-      if(this->index+1 == this->pointerToVector->vectorSize)
+      if(index+1 == pointerToVector->vectorSize)
          throw std::out_of_range("Can't increase iterator");
-      this->index++;
+      index++;
       return *this;
   }
 
   ConstIterator operator++(int)
   {
-      ConstIterator i(this->pointerToVector, this->index);
-      this->operator++();
+      ConstIterator i(pointerToVector, index);
+      operator++();
       return i;
   }
 
   ConstIterator& operator--()
   {
-      if(this->index - 1 <0)
+      if(index - 1 <0)
           throw std::out_of_range("Can't decrease iterator");
-      this->index--;
+      index--;
       return *this;
   }
 
   ConstIterator operator--(int)
   {
-      ConstIterator i(this->pointerToVector, this->index);
-      this->operator--();
+      ConstIterator i(pointerToVector, index);
+      operator--();
       return i;
   }
 
   ConstIterator operator+(difference_type d) const
   {
-      if (this->index + d > this->pointerToVector->vectorSize or this->index + d < 0)
+      if (index + d > pointerToVector->vectorSize or index + d < 0)
           throw std::out_of_range("Can't increase/decrease iterator");
-      ConstIterator i(this->pointerToVector, this->index + d);
+      ConstIterator i(pointerToVector, index + d);
       return i;
   }
 
   ConstIterator operator-(difference_type d) const
   {
-      return this->operator+(-d);
+      return operator+(-d);
   }
 
   bool operator==(const ConstIterator& other) const
   {
-      if(other.pointerToVector == this->pointerToVector and other.index == this->index)
+      if(other.pointerToVector == pointerToVector and other.index == index)
           return 1;
       else
           return 0;
@@ -346,7 +346,7 @@ public:
 
   bool operator!=(const ConstIterator& other) const
   {
-      if(other.pointerToVector == this->pointerToVector and other.index == this->index)
+      if(other.pointerToVector == pointerToVector and other.index == index)
           return 0;
       else
           return 1;

@@ -303,14 +303,16 @@ public:
 
   ConstIterator operator++(int)
   {
-      ConstIterator i(pointerToVector, index);
-      operator++();
-      return i;
+      if(index + 1 == pointerToVector -> vectorSize + 1)
+        throw std::out_of_range("Can't increase iterator");
+      ConstIterator result(*this);
+      ++(*this);
+      return result;
   }
 
   ConstIterator& operator--()
   {
-      if(index - 1 <0)
+      if((int)index - 1 <0)
           throw std::out_of_range("Can't decrease iterator");
       index--;
       return *this;
@@ -318,9 +320,11 @@ public:
 
   ConstIterator operator--(int)
   {
-      ConstIterator i(pointerToVector, index);
-      operator--();
-      return i;
+      if((int)index - 1 <0)
+        throw std::out_of_range("Can't decrease iterator");
+      ConstIterator result(*this);
+      --(*this);
+      return result;
   }
 
   ConstIterator operator+(difference_type d) const

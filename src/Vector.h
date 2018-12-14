@@ -38,8 +38,8 @@ public:
   }
   Vector(std::initializer_list<Type> l)
   {
-    vectorSize = l.size();
-    reservedSize = vectorSize;
+    vectorSize = 0;
+    reservedSize = l.size() + 1;
     vectorArray = new value_type[reservedSize];
     for(auto i = l.begin(); i != l.end(); i++)
     {
@@ -250,7 +250,7 @@ public:
   }
   void reallocate()
   {
-      reservedSize<<=2;
+      reservedSize*=2;
       auto newArray = new value_type[reservedSize];
       for (auto i = 0; i != vectorSize; i++)
       {
@@ -290,7 +290,7 @@ public:
   {
       if(pointerToVector == nullptr or pointerToVector->vectorSize <= index)
           throw std::out_of_range("Iterator is pointing to non-existing place");
-      return pointerToVector->vectorArray[index];
+      return pointerToVector -> vectorArray[index];
   }
 
   ConstIterator& operator++()

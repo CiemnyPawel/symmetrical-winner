@@ -212,7 +212,7 @@ public:
           throw std::out_of_range("Can't erase object out of vector");
       for(auto i = lastExcluded.index; i != vectorSize; i++)
       {
-          vectorArray[i - lastExcluded.index + firstIncluded.index] = vectorArray[i-1];
+          vectorArray[i - lastExcluded.index + firstIncluded.index] = vectorArray[i];
       }
       vectorSize -= lastExcluded.index - firstIncluded.index;
   }

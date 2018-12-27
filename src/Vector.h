@@ -25,112 +25,220 @@ public:
   using iterator = Iterator;
   using const_iterator = ConstIterator;
 
+private:
+    size_type vectorSize;
+    size_type reservedSize;
+    pointer vectorArray;
+public:
   Vector()
-  {}
-
+  {
+    vectorSize = 0;
+    reservedSize = 2;
+    vectorArray = new value_type[reservedSize];
+  }
   Vector(std::initializer_list<Type> l)
   {
-    (void)l; // disables "unused argument" warning, can be removed when method is implemented.
-    throw std::runtime_error("TODO");
+    vectorSize = 0;
+    reservedSize = l.size() + 1;
+    vectorArray = new value_type[reservedSize];
+    for(auto i = l.begin(); i != l.end(); i++)
+    {
+      append(*i);
+    }
   }
 
   Vector(const Vector& other)
   {
-    (void)other;
-    throw std::runtime_error("TODO");
+      vectorSize = other.vectorSize;
+      reservedSize = other.reservedSize;
+      vectorArray = new value_type[reservedSize];
+      for(auto i = 0; i != vectorSize; i++)
+      {
+          vectorArray[i] = other.vectorArray[i];
+      }
   }
 
   Vector(Vector&& other)
   {
-    (void)other;
-    throw std::runtime_error("TODO");
+      vectorSize = other.vectorSize;
+      reservedSize = other.reservedSize;
+      vectorArray = other.vectorArray;
+      other.vectorSize = 0;
+      other.reservedSize = 0;
+      other.vectorArray = nullptr;
   }
 
   ~Vector()
-  {}
+  {
+    if(vectorArray == nullptr)
+      return;
+    delete [] vectorArray;
+  }
 
   Vector& operator=(const Vector& other)
   {
-    (void)other;
-    throw std::runtime_error("TODO");
+      if(this != &other) {
+          delete [] vectorArray;
+          vectorSize = other.vectorSize;
+          reservedSize = other.reservedSize;
+          vectorArray = new value_type[reservedSize];
+          for (auto i = 0; i != vectorSize; i++)
+          {
+              vectorArray[i] = other.vectorArray[i];
+          }
+      }
+      return *this;
   }
 
   Vector& operator=(Vector&& other)
   {
-    (void)other;
-    throw std::runtime_error("TODO");
+      if(this != &other)
+      {
+          delete [] vectorArray;
+          vectorSize = other.vectorSize;
+          reservedSize = other.reservedSize;
+          vectorArray = other.vectorArray;
+          other.vectorSize = 0;
+          other.reservedSize = 0;
+          other.vectorArray = nullptr;
+      }
+      return *this;
   }
 
   bool isEmpty() const
   {
-    throw std::runtime_error("TODO");
+    if(vectorSize==0)
+      return 1;
+    else
+      return 0;
   }
 
   size_type getSize() const
   {
-    throw std::runtime_error("TODO");
+    return vectorSize;
   }
 
   void append(const Type& item)
   {
-    (void)item;
-    throw std::runtime_error("TODO");
+    if(vectorSize==reservedSize)
+      reallocate();
+    vectorArray[(int)vectorSize]=item;
+    vectorSize++;
   }
 
   void prepend(const Type& item)
   {
-    (void)item;
-    throw std::runtime_error("TODO");
+    if(vectorSize==reservedSize)
+      reallocate();
+    for(auto i=vectorSize; i!=0; i--)
+    {
+      vectorArray[i]=vectorArray[i-1];
+    }
+    vectorArray[0]=item;
+    vectorSize++;
   }
 
   void insert(const const_iterator& insertPosition, const Type& item)
   {
-    (void)insertPosition;
-    (void)item;
-    throw std::runtime_error("TODO");
+    if(insertPosition==cbegin())
+    {
+      prepend(item);
+      return;
+    }
+    if(insertPosition==cend())
+    {
+      append(item);
+      return;
+    }
+    if(vectorSize==reservedSize)
+      reallocate();
+    size_type insertPlace=insertPosition.index-cbegin().index;
+    for(auto i=vectorSize; i!=insertPlace; i--)
+    {
+      vectorArray[i]=vectorArray[i-1];
+    }
+    vectorArray[insertPlace]=item;
+    vectorSize++;
   }
 
   Type popFirst()
   {
-    throw std::runtime_error("TODO");
+    if(isEmpty() == 1)
+        throw std::out_of_range("Can't delete first element in empty vector");
+    else
+    {
+        value_type temporary = *begin();
+        for(auto i = 0; i != vectorSize - 1; i++)
+        {
+            vectorArray[i] = vectorArray[i+1];
+        }
+        vectorSize--;
+        return temporary;
+    }
   }
 
   Type popLast()
   {
-    throw std::runtime_error("TODO");
+      if(isEmpty() == 1)
+          throw std::out_of_range("Can't delete last element in empty vector");
+      else
+      {
+          value_type temporary = vectorArray[vectorSize - 1];
+          vectorSize--;
+          return temporary;
+      }
   }
 
   void erase(const const_iterator& possition)
   {
-    (void)possition;
-    throw std::runtime_error("TODO");
+      if (isEmpty() == 1)
+          throw std::out_of_range("Can't erase element from empty vector");
+      if (possition.index >= vectorSize or possition.index < 0)
+          throw std::out_of_range("Can't erase object out of vector");
+      for(auto i = possition.index; i != vectorSize -1; i++)
+      {
+          vectorArray[i] = vectorArray[i+1];
+      }
+      vectorSize--;
   }
 
   void erase(const const_iterator& firstIncluded, const const_iterator& lastExcluded)
   {
-    (void)firstIncluded;
-    (void)lastExcluded;
-    throw std::runtime_error("TODO");
+      if (isEmpty() == 1)
+          throw std::out_of_range("Can't erase element from empty vector");
+      if (firstIncluded.index >= cend().index and firstIncluded.index < cbegin().index)
+          throw std::out_of_range("Can't erase object out of vector");
+      if (lastExcluded.index >= cend().index and lastExcluded.index < cbegin().index)
+          throw std::out_of_range("Can't erase object out of vector");
+      for(auto i = lastExcluded.index; i != vectorSize; i++)
+      {
+          vectorArray[i - lastExcluded.index + firstIncluded.index] = vectorArray[i];
+      }
+      vectorSize -= lastExcluded.index - firstIncluded.index;
   }
 
   iterator begin()
   {
-    throw std::runtime_error("TODO");
+      iterator i = Iterator(this,0);
+      return i;
   }
 
   iterator end()
   {
-    throw std::runtime_error("TODO");
+      iterator i = Iterator(this,vectorSize);
+      return i;
   }
 
   const_iterator cbegin() const
   {
-    throw std::runtime_error("TODO");
+      const_iterator i = ConstIterator(this,0);
+      return i;
   }
 
   const_iterator cend() const
   {
-    throw std::runtime_error("TODO");
+      const_iterator i = ConstIterator(this,vectorSize);
+      return i;
   }
 
   const_iterator begin() const
@@ -141,6 +249,17 @@ public:
   const_iterator end() const
   {
     return cend();
+  }
+  void reallocate()
+  {
+      reservedSize*=2;
+      auto newArray = new value_type[reservedSize];
+      for (auto i = 0; i != vectorSize; i++)
+      {
+          newArray[i] = vectorArray[i];
+      }
+      delete [] vectorArray;
+      vectorArray = newArray;
   }
 };
 
@@ -154,56 +273,89 @@ public:
   using pointer = typename Vector::const_pointer;
   using reference = typename Vector::const_reference;
 
+    const Vector* pointerToVector;
+    size_t index;
+
+
   explicit ConstIterator()
-  {}
+  {
+      pointerToVector = nullptr;
+      index = 0;
+  }
+  ConstIterator(const Vector* other, size_t other2)
+  {
+      pointerToVector = other;
+      index = other2;
+  }
 
   reference operator*() const
   {
-    throw std::runtime_error("TODO");
+      if(pointerToVector == nullptr or pointerToVector->vectorSize <= index)
+          throw std::out_of_range("Iterator is pointing to non-existing place");
+      return pointerToVector -> vectorArray[index];
   }
 
   ConstIterator& operator++()
   {
-    throw std::runtime_error("TODO");
+      if(index + 1 == pointerToVector -> vectorSize + 1)
+         throw std::out_of_range("Can't increase iterator");
+      index++;
+      return *this;
   }
 
   ConstIterator operator++(int)
   {
-    throw std::runtime_error("TODO");
+      if(index + 1 == pointerToVector -> vectorSize + 1)
+        throw std::out_of_range("Can't increase iterator");
+      ConstIterator result(*this);
+      ++(*this);
+      return result;
   }
 
   ConstIterator& operator--()
   {
-    throw std::runtime_error("TODO");
+      if((int)index - 1 <0)
+          throw std::out_of_range("Can't decrease iterator");
+      index--;
+      return *this;
   }
 
   ConstIterator operator--(int)
   {
-    throw std::runtime_error("TODO");
+      if((int)index - 1 <0)
+        throw std::out_of_range("Can't decrease iterator");
+      ConstIterator result(*this);
+      --(*this);
+      return result;
   }
 
   ConstIterator operator+(difference_type d) const
   {
-    (void)d;
-    throw std::runtime_error("TODO");
+      if (index + d > pointerToVector->vectorSize or index + d < 0)
+          throw std::out_of_range("Can't increase/decrease iterator");
+      ConstIterator i(pointerToVector, index + d);
+      return i;
   }
 
   ConstIterator operator-(difference_type d) const
   {
-    (void)d;
-    throw std::runtime_error("TODO");
+      return operator+(-d);
   }
 
   bool operator==(const ConstIterator& other) const
   {
-    (void)other;
-    throw std::runtime_error("TODO");
+      if(other.pointerToVector == pointerToVector and other.index == index)
+          return 1;
+      else
+          return 0;
   }
 
   bool operator!=(const ConstIterator& other) const
   {
-    (void)other;
-    throw std::runtime_error("TODO");
+      if(other.pointerToVector == pointerToVector and other.index == index)
+          return 0;
+      else
+          return 1;
   }
 };
 
@@ -220,6 +372,9 @@ public:
   Iterator(const ConstIterator& other)
     : ConstIterator(other)
   {}
+
+  Iterator (const Vector* other, size_t other2)
+            : ConstIterator(other, other2) {}
 
   Iterator& operator++()
   {
